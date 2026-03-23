@@ -20,8 +20,11 @@ month = 1
 @click.option('--pg-port', default=5432, type=int, help='PostgreSQL port')
 @click.option('--pg-db', default='ny_taxi', help='PostgreSQL database name')
 @click.option('--target-table', default='yellow_taxi_data', help='Target table name')
+@click.option('--year', default=2021, type=int, help='Year of the data (e.g., 2021)')
+@click.option('--month', default=1, type=int, help='Month of the data (1-12)')
+@click.option('--chunksize', default=100000, type=int, help='Number of rows to process per chunk')
 
-def run(pg_user, pg_pass, pg_host, pg_port, pg_db, target_table):
+def run(pg_user, pg_pass, pg_host, pg_port, pg_db, target_table,year, month, chunksize):
     dtype = {
         "VendorID": "Int64",
         "passenger_count": "Int64",
@@ -49,7 +52,7 @@ def run(pg_user, pg_pass, pg_host, pg_port, pg_db, target_table):
     # Read a sample of the data
     prefix = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/'
     df = pd.read_csv(
-        prefix + 'yellow_tripdata_{year}-{month:02d}.csv.gz',
+        prefix + f'yellow_tripdata_{year}-{month:02d}.csv.gz',
         dtype=dtype,
         parse_dates=parse_dates
     )
@@ -89,7 +92,7 @@ def run(pg_user, pg_pass, pg_host, pg_port, pg_db, target_table):
 
 
     df_iter = pd.read_csv(
-        prefix + 'yellow_tripdata_{year}-{month:02d}.csv.gz',
+        prefix + f'yellow_tripdata_{year}-{month:02d}.csv.gz',
         dtype=dtype,
         parse_dates=parse_dates,
         iterator=True,
