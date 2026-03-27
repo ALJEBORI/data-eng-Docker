@@ -84,4 +84,12 @@ services:
 
 volumes:
   ny_taxi_postgres_data:
+    driver: local
   pgadmin_data:
+    driver: local
+  kestra_postgres_data:
+    driver: local
+  kestra_data:
+    driver: local
+  kestra_tmp:
+    driver: local
